@@ -1,4 +1,45 @@
-/* You can add global styles to this file, and also import other style files */
+/* Remove margem e padding padrão do navegador */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* Garante que o app ocupe toda a altura da tela */
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Classe utilitaria para espacamento */
+.page-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Classe para cards com sombra padrao */
+.mat-card-custom {
+  margin-bottom: 16px;
+}
+
+/* Snackbar de sucesso (verde) */
+.snack-success {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+/* Snackbar de erro (vermelho) */
+.snack-error {
+  background-color: #f44336 !important;
+  color: white !important;
+}
