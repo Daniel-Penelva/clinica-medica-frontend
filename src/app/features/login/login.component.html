@@ -1,1 +1,121 @@
-<p>login works!</p>
+<div class="login-container">
+  <mat-card class="login-card">
+    <!-- Cabecalho -->
+    <mat-card-header>
+      <div class="login-header">
+        <mat-icon class="login-icon">local_hospital</mat-icon>
+        <h1>Clínica Médica</h1>
+        <p>Faça login para continuar</p>
+      </div>
+    </mat-card-header>
+
+    <!-- Formulario -->
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Campo Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="seu@email.com"
+          />
+          <mat-icon matSuffix>email</mat-icon>
+          @if (emailCtrl.invalid && emailCtrl.touched) {
+            <mat-error>{{ getEmailErro() }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Campo Senha -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input
+            matInput
+            [type]="mostrarSenha ? 'text' : 'password'"
+            formControlName="senha"
+          />
+          <!-- Botao para mostrar/ocultar senha -->
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="mostrarSenha = !mostrarSenha"
+          >
+            <mat-icon>
+              {{ mostrarSenha ? "visibility_off" : "visibility" }}
+            </mat-icon>
+          </button>
+          @if (senhaCtrl.invalid && senhaCtrl.touched) {
+            <mat-error>{{ getSenhaErro() }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Botao de submit -->
+        <button
+          mat-raised-button
+          color="primary"
+          class="full-width btn-login"
+          type="submit"
+          [disabled]="loading"
+        >
+          @if (loading) {
+            <mat-spinner diameter="20" />
+          } @else {
+            <mat-icon>login</mat-icon>
+            Entrar
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!--
+EXPLICAÇÕES:
+
+1. BLOCO EMAIL
+    Campo 'mat-form-field' 
+        - é o componente do Angular Material que envolve inputs, labels e erros em visual padrão.
+        - appearance="outline": borda contornada ao redor do campo.
+        - class="full-width": faz o campo ocupar a largura total do container (CSS customizado).
+    Campo 'input'
+        - matInput: diretiva do Angular Material para estilizar o input.
+        - type="email": tipo de input para validação de email (xxx@yyy.zzz) no navegador.
+        - formControlName="email": Associa o campo ao FormControl chamado "email" dentro do FormGroup do seu componente (ex.: form.get('email') no TypeScript)
+        - placeholder="seu@email.com": Texto temporário exibido quando o campo está vazio, para indicar o formato esperado.
+    Icone ao lado do input
+        - mat-icon: componente do Material que exibe um ícone.
+        - matSuffix: posição do ícone — aqui no final do campo, à direita do input.
+        - email (conteúdo do mat-icon): nome do ícone do Material que aparece como um ícone de e‑mail.
+    Mensagem de erro condicional
+        - *ngIf="emailCtrl.invalid && emailCtrl.touched": Exibe o erro somente se o campo for inválido e já tiver sido tocado (interagido) pelo usuário.
+        - mat-error: componente do Material para mostrar mensagens de erro estilizadas. 
+        - {{ getEmailErro() }}: chama a função getEmailErro() do componente para retornar a mensagem específica da validação que falhou.
+
+2. BLOCO SENHA
+    Campo 'Input'
+        - matInput: marca o <input> como um input do Angular Material (fica estilizado e integrado com o mat-form-field).
+        - formControlName="senha": associa esse campo ao FormControl chamado "senha" dentro do FormGroup do componente (ex.: form.get('senha') no TypeScript).
+        - [type]="mostrarSenha ? 'text' : 'password'":
+            - É um binding de atributo: o type do input muda conforme o valor da variável mostrarSenha.
+            - e mostrarSenha === true - type="text" (a senha fica visível).
+            - Se mostrarSenha === false - type="password" (a senha fica escondida com ••••••).
+    Botão para mostrar/ocultar senha
+        - mat-icon-button: botão pequeno com ícone do Material.
+        - matSuffix: diz que o botão deve ficar no final do campo (à direita do input).
+        - type="button": garante que o botão não dispara submit se estiver dentro de um <form>.
+        - (click)="mostrarSenha = !mostrarSenha":
+            - Quando clica no botão, inverte o valor de mostrarSenha entre true e false.
+            - Assim alterna entre campo text (mostrar senha) e password (ocultar senha) no input.
+        - mat-icon com {{ mostrarSenha ? "visibility_off" : "visibility" }}:
+            - Exibe o ícone "visibility" (olho aberto) quando a senha está oculta (mostrarSenha === false).
+            - Exibe o ícone "visibility_off" (olho com linha) quando a senha está visível (mostrarSenha === true).
+    Mensagem de erro condicional
+        - @if (...) { ... }: bloco condicional; mostra o conteúdo somente se a condição for verdadeira.
+        - senhaCtrl.invalid && senhaCtrl.touched:
+            - senhaCtrl.invalid: o FormControl de senha possui algum erro de validação (ex.: Mínimo 6 caracteres, regex).
+            - senhaCtrl.touched: o campo já foi tocado/interagido (evita mostrar erro no carregamento inicial).
+        - <mat-error>...</mat-error>: Componente do Material que exibe mensagem de erro do campo (abaixo do input).
+        - {{ getSenhaErro() }}: Chama uma função getSenhaErro() do componente para retornar a mensagem de erro de acordo com qual validação falhou.
+-->

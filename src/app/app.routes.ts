@@ -2,10 +2,10 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
 
-    // Redireciona raiz para login por enquanto
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    // Rota publica: Login
+    { path: 'login', loadComponent: () => import('./features/login/login.component').then(m => m.LoginComponent)},
 
-    // Rota não encontrada
+    // Qualquer rota não encontrada -> login
     { path: '**', redirectTo: 'login'},
 
 ];
