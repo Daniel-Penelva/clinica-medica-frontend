@@ -1,0 +1,38 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.app-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.user-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.user-email {
+    font-size: 14px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.menu-header {
+    padding: 8px 16px;
+    color: #666;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
