@@ -1,1 +1,17 @@
-<p>shell works!</p>
+<div class="shell-container">
+  <!-- Navbar no topo - recebe referencia ao sidenav -->
+  <app-navbar (toggleSidenav)="toggleSidenav()" />
+
+  <!-- Container principal: sidebar + conteudo -->
+  <mat-sidenav-container class="sidenav-container">
+    <!-- Sidebar lateral -->
+    <mat-sidenav #sidenav mode="side" opened class="sidenav">
+      <app-sidebar />
+    </mat-sidenav>
+
+    <!-- Conteudo da pagina ativa -->
+    <mat-sidenav-content class="main-content">
+      <router-outlet />
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
