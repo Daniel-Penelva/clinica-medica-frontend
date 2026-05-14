@@ -1,0 +1,42 @@
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    color: #1A3C5E;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.sidebar-logo {
+    color: #2E75B6;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+}
+
+/* Item ativo no menu: destaque azul */
+.active-link {
+    background-color: #e3f2fd !important;
+    color: #1A3C5E !important;
+    border-left: 3px solid #2E75B6;
+    font-weight: 600;
+}
+
+.active-link mat-icon {
+    color: #2E75B6 !important;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #999;
+    border-top: 1px solid #e0e0e0;
+}

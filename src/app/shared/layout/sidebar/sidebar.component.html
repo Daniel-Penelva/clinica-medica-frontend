@@ -1,1 +1,49 @@
-<p>sidebar works!</p>
+<div class="sidebar-container">
+  <!-- Logo / cabecalho da sidebar -->
+  <div class="sidebar-header">
+    <mat-icon class="sidebar-logo">local_hospital</mat-icon>
+    <span>Menu</span>
+  </div>
+
+  <mat-divider />
+
+  <!-- Lista de itens do menu -->
+  <mat-nav-list>
+    @for (item of itensVisiveis; track item.route) {
+      <a
+        mat-list-item
+        [routerLink]="item.route"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+      >
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </a>
+    }
+  </mat-nav-list>
+
+  <!-- Versao no rodape da sidebar -->
+  <div class="sidebar-footer">
+    <span>v1.0.0</span>
+  </div>
+</div>
+
+<!-- 
+EXPLICAÇÃO:
+
+1.Lista de navegação (mat-nav-list)
+    . mat-nav-list: lista de navegação do Angular Material (estilizada para menus).
+    . @for (item of itensVisiveis; track item.route):
+        . Loop que itera sobre itensVisiveis()
+        . track item.route: otimização de performance (Angular sabe quando re-renderizar).
+        . Só mostra itens permitidos pelo filtro de roles.
+
+2. Item individual do menu
+    . Cada <a> representa um item do menu:
+        . mat-list-item: estiliza como item de lista do Material.
+        . [routerLink]="item.route": navegação para a rota (/dashboard, /pacientes, etc.).
+        . routerLinkActive="active-link": adiciona classe CSS active-link quando a rota atual bate com item.route.
+        . `[routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"**:
+            . exact: true só para Dashboard.
+            . Por quê? Rota raiz / também "bate" com /dashboard. O exact evita isso.
+-->
