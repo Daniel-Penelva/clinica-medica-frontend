@@ -1,1 +1,125 @@
-<p>pacientes-lista works!</p>
+<div class="page-container">
+  <!-- Cabecalho da pagina -->
+  <div class="page-header">
+    <div>
+        <!-- Título da página e contagem de pacientes. -->
+      <h2>Pacientes</h2>
+      <p>{{ totalElements }} paciente(s) cadastrado(s)</p>
+    </div>
+    <!--- Botão para navegar para o cadastro de novo paciente. -->
+    <button mat-raised-button color="primary" (click)="novo()">
+      <mat-icon>add</mat-icon>
+      Novo Paciente
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <!-- Campo de busca reativo (FormControl buscaCtrl) com debounce no componente. -->
+      <mat-form-field appearance="outline" class="busca-field">
+        <mat-label>Buscar por nome</mat-label>
+        <input
+          matInput
+          [formControl]="buscaCtrl"
+          placeholder="Digite o nome do paciente..."
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <!-- Loading spinner - Exibe spinner enquanto chama o backend (via loading). -->
+      @if (loading) {
+        <div class="loading-container">
+          <mat-spinner diameter="40" />
+        </div>
+      }
+
+      <!-- Tabela - @if (!loading) mostra a tabela apenas quando o carregamento termina. -->
+      @if (!loading) {
+        <!-- MatTable com MatTableDataSource alimentado por PacienteResponse[] -->
+        <table mat-table [dataSource]="dataSource" class="tabela-pacientes">
+          <!-- Coluna Nome -->
+          <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef>Nome</th>
+            <td mat-cell *matCellDef="let p">{{ p.nome }}</td>
+          </ng-container>
+
+          <!-- Coluna CPF -->
+          <ng-container matColumnDef="cpf">
+            <th mat-header-cell *matHeaderCellDef>CPF</th>
+            <td mat-cell *matCellDef="let p">{{ p.cpf }}</td>
+          </ng-container>
+
+          <!-- Coluna Telefone (?? "-" e ?? "Particular": se o campo for null/undefined, usa valor padrão.) -->
+          <ng-container matColumnDef="telefone">
+            <th mat-header-cell *matHeaderCellDef>Telefone</th>
+            <td mat-cell *matCellDef="let p">{{ p.telefone ?? "-" }}</td>
+          </ng-container>
+
+          <!-- Coluna Convenio -->
+          <ng-container matColumnDef="convenio">
+            <th mat-header-cell *matHeaderCellDef>Convenio</th>
+            <td mat-cell *matCellDef="let p">
+              {{ p.convenio ?? "Particular" }}
+            </td>
+          </ng-container>
+
+          <!-- Coluna Status ativo/inativo (Exibe chip com CSS .chip-ativo (verde) ou .chip-inativo (vermelho).) -->
+          <ng-container matColumnDef="ativo">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let p">
+              <mat-chip [class]="p.ativo ? 'chip-ativo' : 'chip-inativo'">
+                {{ p.ativo ? "Ativo" : "Inativo" }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Coluna Acoes -->
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Acoes</th>
+            <td mat-cell *matCellDef="let p">
+              <button
+                mat-icon-button
+                color="primary"
+                matTooltip="Editar"
+                (click)="editar(p.id)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              @if (p.ativo) {
+                <button
+                  mat-icon-button
+                  color="warn"
+                  matTooltip="Desativar"
+                  (click)="desativar(p)"
+                >
+                  <mat-icon>block</mat-icon>
+                </button>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+          <tr mat-row *matRowDef="let row; columns: colunas"></tr>
+
+          <!-- Linha exibida quando nao há dados - Exibida quando dataSource estiver vazio (sem resultados). -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell sem-dados" [attr.colspan]="colunas.length">
+              Nenhum paciente encontrado.
+            </td>
+          </tr>
+        </table>
+
+        <!-- Paginacao - Controle de paginação integrado com onPageChange no componente. -->
+        <mat-paginator
+          [length]="totalElements"
+          [pageSize]="pageSize"
+          [pageIndex]="pageIndex"
+          [pageSizeOptions]="[5, 10, 25, 50]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

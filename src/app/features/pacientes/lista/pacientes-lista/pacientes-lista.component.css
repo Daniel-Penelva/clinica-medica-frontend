@@ -1,0 +1,53 @@
+/* layout flex para titulo e botão */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #1A3C5E;
+    margin: 0;
+}
+
+.page-header p {
+    color: #666;
+    font-size: 14px;
+    margin: 4px 0 0;
+}
+
+.busca-field {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 16px;
+}
+
+.tabela-pacientes {
+    width: 100%;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.sem-dados {
+    text-align: center;
+    padding: 32px;
+    color: #999;
+}
+
+/* .chip-ativo / .chip-inativo = cores verdes/vermelhas para status ativo/inativo. */
+.chip-ativo {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+}
+
+.chip-inativo {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+}

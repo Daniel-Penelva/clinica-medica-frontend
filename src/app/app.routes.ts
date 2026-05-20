@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
+import { PacientesListaComponent } from './features/pacientes/lista/pacientes-lista/pacientes-lista.component';
 
 export const routes: Routes = [
 
@@ -9,8 +10,10 @@ export const routes: Routes = [
     // Rotas protegidas dentro do Shell (Navbar + Sidebar)
     { path: '', canActivate: [authGuard], 
         loadComponent: () => import('./shared/layout/shell/shell.component').then(m => m.ShellComponent), children:[
-            { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) }
-        ]},
+            { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
+            { path: 'pacientes', loadComponent: () => import('./features/pacientes/lista/pacientes-lista/pacientes-lista.component').then(m => m.PacientesListaComponent) },
+        ]
+    },
 
     // Qualquer rota não encontrada -> login
     { path: '**', redirectTo: 'login'},
