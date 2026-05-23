@@ -19,6 +19,7 @@ import { PacienteResponse } from '../../../../core/models/paciente.model';
 import { PacienteService } from '../../../../core/services/paciente.service';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-pacientes-lista',
@@ -43,12 +44,13 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 export class PacientesListaComponent {
   
   /**
-   * 
+   * Injeção de dependências
   */
   private pacienteService = inject(PacienteService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  protected authService = inject(AuthService);
 
   /**
    * Colunas exibidas na tabela

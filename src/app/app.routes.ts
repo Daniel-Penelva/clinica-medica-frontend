@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
-import { PacientesListaComponent } from './features/pacientes/lista/pacientes-lista/pacientes-lista.component';
 
 export const routes: Routes = [
 
@@ -12,6 +11,8 @@ export const routes: Routes = [
         loadComponent: () => import('./shared/layout/shell/shell.component').then(m => m.ShellComponent), children:[
             { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
             { path: 'pacientes', loadComponent: () => import('./features/pacientes/lista/pacientes-lista/pacientes-lista.component').then(m => m.PacientesListaComponent) },
+            { path: 'pacientes/novo', loadComponent: () => import('./features/pacientes/form/paciente-form/paciente-form.component').then(m => m.PacienteFormComponent) },
+            { path: 'pacientes/:id/editar', loadComponent: () => import('./features/pacientes/form/paciente-form/paciente-form.component').then(m => m.PacienteFormComponent) },
         ]
     },
 

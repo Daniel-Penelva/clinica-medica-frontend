@@ -6,11 +6,13 @@
       <h2>Pacientes</h2>
       <p>{{ totalElements }} paciente(s) cadastrado(s)</p>
     </div>
-    <!--- Botão para navegar para o cadastro de novo paciente. -->
-    <button mat-raised-button color="primary" (click)="novo()">
-      <mat-icon>add</mat-icon>
-      Novo Paciente
-    </button>
+    <!--- Botão para navegar para o cadastro de novo paciente. Só ADMIN e RECEPCIONISTA podem cadastrar paciente. -->
+    @if (authService.currentRole() === 'ADMIN' || authService.currentRole() === 'RECEPCIONISTA') {
+      <button mat-raised-button color="primary" (click)="novo()">
+        <mat-icon>add</mat-icon>
+        Novo Paciente
+      </button>
+    }
   </div>
 
   <mat-card>
@@ -85,7 +87,8 @@
               >
                 <mat-icon>edit</mat-icon>
               </button>
-              @if (p.ativo) {
+              <!-- Botão para desativar paciente e só aparece pacientes ativos. Só ADMIN pode desativar o paciente -->
+              @if (p.ativo && authService.isAdmin()) {
                 <button
                   mat-icon-button
                   color="warn"

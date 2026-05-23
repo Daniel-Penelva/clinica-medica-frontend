@@ -1,0 +1,41 @@
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #1A3C5E;
+    margin: 0;
+}
+
+.form-card {
+    margin-bottom: 24px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 16px 0;
+}
+
+.col-span-2 {
+    grid-column: span 2;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 60px;
+}

@@ -1,1 +1,138 @@
-<p>paciente-form works!</p>
+<div class="page-container">
+
+    <!-- Cabecalho -->
+    <div class="page-header">
+        <button mat-icon-button (click)="voltar()" matTooltip="Voltar">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>{{ titulo }}</h2>
+    </div>
+
+    <!-- Mostra spinner enquanto busca dados do paciente em modo de edição -->
+    @if (loading) {
+    <div class="loading-container">
+        <mat-spinner diameter="40" />
+    </div>
+    }
+
+    <!-- Formulário liga ao FormGroup reativo do PacienteFormComponent -->
+    @if (!loading) {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <!-- Dados principais -->
+        <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>Dados Pessoais</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="form-grid">
+
+                <!-- mat-form-field para cada campo -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Nome completo *</mat-label>
+                    <input matInput formControlName="nome">
+                    @if (form.get('nome')?.invalid && form.get('nome')?.touched) {
+                    <mat-error>Nome e obrigatorio (min. 3 caracteres)</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>CPF *</mat-label>
+                    <input matInput formControlName="cpf" placeholder="00000000000">
+                    @if (form.get('cpf')?.invalid && form.get('cpf')?.touched) {
+                    <mat-error>CPF deve ter 11 digitos numericos</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" type="email">
+                    @if (form.get('email')?.invalid && form.get('email')?.touched) {
+                    <mat-error>Email invalido</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Telefone</mat-label>
+                    <input matInput formControlName="telefone" placeholder="00000000000">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Data de Nascimento</mat-label>
+                    <input matInput formControlName="dataNascimento" type="date">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Sexo</mat-label>
+                    <mat-select formControlName="sexo">
+                        @for (op of sexoOpcoes; track op.valor) {
+                        <mat-option [value]="op.valor">{{ op.label }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Endereco -->
+        <mat-card class="form-card" formGroupName="endereco">
+            <mat-card-header>
+                <mat-card-title>Endereco</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="form-grid">
+
+                <mat-form-field appearance="outline" class="col-span-2">
+                    <mat-label>Logradouro</mat-label>
+                    <input matInput formControlName="logradouro">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Numero</mat-label>
+                    <input matInput formControlName="numero">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Complemento</mat-label>
+                    <input matInput formControlName="complemento">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Bairro</mat-label>
+                    <input matInput formControlName="bairro">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Cidade</mat-label>
+                    <input matInput formControlName="cidade">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>UF</mat-label>
+                    <input matInput formControlName="uf" maxlength="2">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>CEP</mat-label>
+                    <input matInput formControlName="cep" placeholder="00000000">
+                </mat-form-field>
+
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Botoes de acao -->
+        <div class="form-actions">
+            <button mat-button type="button" (click)="voltar()">
+                Cancelar
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="salvando">
+                @if (salvando) {
+                <mat-spinner diameter="20" />
+                } @else {
+                <mat-icon>save</mat-icon>
+                {{ modo === 'cadastro' ? 'Cadastrar' : 'Salvar' }}
+                }
+            </button>
+        </div>
+
+    </form>
+    }
+</div>
