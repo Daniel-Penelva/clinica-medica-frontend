@@ -12,11 +12,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PacienteService } from '../../../../core/services/paciente.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Estado, ESTADOS_BRASILEIROS } from '../../../../core/models/estados.model';
+import { CepService } from '../../../../core/services/cep.service';
+import { PacienteService } from '../../../../core/services/paciente.service';
 
 @Component({
   selector: 'app-paciente-form',
@@ -31,6 +34,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatIconModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule
   ],
   templateUrl: './paciente-form.component.html',
   styleUrl: './paciente-form.component.css',
@@ -44,6 +48,7 @@ export class PacienteFormComponent {
   private router = inject(Router);
   private pacienteService = inject(PacienteService);
   private snackBar = inject(MatSnackBar);
+  private cepService = inject(CepService);
 
   /**
    * Variáveis de estado do componente:
@@ -51,11 +56,18 @@ export class PacienteFormComponent {
    * 'pacienteId' usado para edição (armazena o ID do paciente, ou null se estiver em modo de cadastro)
    * 'loading' para carregar os dados do paciente (modo edição)
    * 'salvando' para bloquear botões enquanto salva os dados no backend
+   * 'estados' para preencher o select de estados no formulário de endereço - Lista de estados para o campo de UF no formulário de endereço
+   * 'buscandoCep' para mostrar um spinner de carregamento enquanto busca os dados do CEP
+   * 'cepNaoEncontrado' para exibir uma mensagem de erro caso o CEP informado não seja encontrado na base do ViaCEP
    */
   modo: 'cadastro' | 'edicao' = 'cadastro';
   pacienteId: number | null = null;
   loading = false;
   salvando = false;
+  
+  estados: Estado[] = ESTADOS_BRASILEIROS;
+  buscandoCep = false;
+  cepNaoEncontrado = false;
 
   /**
    * Lista de opções para o campo de sexo do paciente.
@@ -212,5 +224,62 @@ export class PacienteFormComponent {
   */
   get titulo(): string {
     return this.modo === 'cadastro' ? 'Novo Paciente' : 'Editar Paciente';
+  }
+
+
+  /**
+   * Busca os dados de endereço a partir do CEP informado no formulário utilizando a API ViaCEP.
+   * O método é acionado quando o campo de CEP perde o foco (blur) ou quando o usuário clica no ícone de busca ao lado do campo de CEP.
+   * Realiza validações para garantir que o CEP tenha o formato correto antes de fazer a consulta.
+   * Durante a busca, os campos de endereço são desabilitados para evitar edição pelo usuário, e um spinner de carregamento é exibido no campo de CEP.
+   * Se o CEP for encontrado, os campos de endereço são preenchidos automaticamente com os dados retornados pela API.
+   * Caso contrario o formulário exibe uma mensagem de erro indicando que o CEP não foi encontrado, e os campos de endereço são limpos para permitir que o usuário tente outro CEP ou corrija o valor.
+   * Em caso de erro na requisição (ex: problemas de conexão), os campos de endereço são reabilitados para permitir que o usuário corrija o CEP ou tente outro, e o spinner de carregamento é removido.
+  */
+  buscarCep(): void {
+
+    // Obtém o valor do campo de CEP do formulário, garantindo que seja uma string (caso o campo seja nulo, usa string vazia como fallback).
+    const cep = this.form.get('endereco.cep')?.value ?? '';
+
+    // Limpa o aviso anterior de CEP não encontrado
+    this.cepNaoEncontrado = false;
+
+    // Só consulta o CEP se tiver exatamente 8 dígitos numéricos - uso do replace para remover caracteres não númericos
+    if (cep.replace(/\D/g, '').length !== 8) return;
+
+    // Indica que a busca por CEP está em andamento, para mostrar um spinner de carregamento no campo de CEP
+    this.buscandoCep = true;
+
+    // Desabilita os campos de endereço durante a consulta para evitar edição do usuário enquanto os dados estão sendo carregados
+    this.form.get('endereco')?.disable();
+
+    this.cepService.buscar(cep).subscribe({
+      next: (dados) => {
+        this.buscandoCep = false;
+        this.form.get('endereco')?.enable(); // Reabilita os campos de endereço após a consulta - mesmo que o CEP não seja encontrado, o usuário pode querer corrigir ou tentar outro CEP
+
+        if (!dados) {
+          this.cepNaoEncontrado = true; // Exibe mensagem de erro caso o CEP não seja encontrado - Limpa os campos e avisa o usuário
+          this.form.get('endereco')?.patchValue({
+            logradouro: '',
+            bairro: '',
+            cidade: '',
+            uf: ''
+          });
+          return;
+        }
+
+        // Preenche os campos automaticamente com os dados retornados pela API ViaCEP usando patchValue para atualizar apenas os campos relacionados ao endereço
+        this.form.get('endereco')?.patchValue({
+          logradouro: dados.logradouro,
+          bairro:     dados.bairro,
+          cidade:     dados.localidade,  // ViaCEP usa 'localidade'
+          uf:         dados.uf
+        });
+      }, error: () => {
+        this.buscandoCep = false;
+        this.form.get('endereco')?.enable(); // Reabilita os campos de endereço mesmo em caso de erro na consulta, para permitir que o usuário corrija o CEP ou tente outro
+      }
+    });
   }
 }

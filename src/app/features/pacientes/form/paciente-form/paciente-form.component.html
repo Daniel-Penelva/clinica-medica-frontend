@@ -80,39 +80,76 @@
             </mat-card-header>
             <mat-card-content class="form-grid">
 
+                <!-- CEP com busca automatica -->
+                <mat-form-field appearance="outline">
+                    <mat-label>CEP</mat-label>
+                    <input matInput formControlName="cep" placeholder="00000000" maxlength="8" (blur)="buscarCep()">
+                    <!-- Icone de busca clicavel -->
+                    <button mat-icon-button matSuffix type="button" matTooltip="Buscar CEP" (click)="buscarCep()"
+                        [disabled]="buscandoCep">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                    @if (form.get('endereco.cep')?.invalid &&
+                    form.get('endereco.cep')?.touched) {
+                    <mat-error>CEP deve ter 8 digitos</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Barra de progresso durante a consulta -->
+                @if (buscandoCep) {
+                <div class="cep-loading col-span-2">
+                    <mat-progress-bar mode="indeterminate" />
+                    <span>Consultando CEP...</span>
+                </div>
+                }
+
+                <!-- Aviso de CEP nao encontrado -->
+                @if (cepNaoEncontrado) {
+                <p class="cep-erro col-span-2">
+                    CEP nao encontrado. Preencha o endereco manualmente.
+                </p>
+                }
+
+                <!-- Logradouro (preenchido automaticamente) -->
                 <mat-form-field appearance="outline" class="col-span-2">
                     <mat-label>Logradouro</mat-label>
                     <input matInput formControlName="logradouro">
                 </mat-form-field>
 
+                <!-- Numero -->
                 <mat-form-field appearance="outline">
                     <mat-label>Numero</mat-label>
                     <input matInput formControlName="numero">
                 </mat-form-field>
 
+                <!-- Complemento -->
                 <mat-form-field appearance="outline">
                     <mat-label>Complemento</mat-label>
                     <input matInput formControlName="complemento">
                 </mat-form-field>
 
+                <!-- Bairro (preenchido automaticamente) -->
                 <mat-form-field appearance="outline">
                     <mat-label>Bairro</mat-label>
                     <input matInput formControlName="bairro">
                 </mat-form-field>
 
+                <!-- Cidade (preenchida automaticamente) -->
                 <mat-form-field appearance="outline">
                     <mat-label>Cidade</mat-label>
                     <input matInput formControlName="cidade">
                 </mat-form-field>
 
+                <!-- UF como mat-select -->
                 <mat-form-field appearance="outline">
                     <mat-label>UF</mat-label>
-                    <input matInput formControlName="uf" maxlength="2">
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>CEP</mat-label>
-                    <input matInput formControlName="cep" placeholder="00000000">
+                    <mat-select formControlName="uf">
+                        @for (estado of estados; track estado.sigla) {
+                        <mat-option [value]="estado.sigla">
+                            {{ estado.sigla }} - {{ estado.nome }}
+                        </mat-option>
+                        }
+                    </mat-select>
                 </mat-form-field>
 
             </mat-card-content>
