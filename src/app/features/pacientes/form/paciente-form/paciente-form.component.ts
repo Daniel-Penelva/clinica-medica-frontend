@@ -88,9 +88,9 @@ export class PacienteFormComponent {
    */
   form: FormGroup = this.fb.group({
     nome: ['', [Validators.required, Validators.minLength(3)]],
-    cpf: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
+    cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]], // Validação COM máscara
     email: ['', Validators.email],
-    telefone: ['', Validators.pattern(/^\d{10,11}$/)],
+    telefone: ['', Validators.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/)], // Validação COM máscara
     dataNascimento: [''],
     sexo: [''],
     endereco: this.fb.group({
@@ -103,6 +103,61 @@ export class PacienteFormComponent {
       cep: ['', Validators.pattern(/^\d{8}$/)],
     }),
   });
+
+  /**
+   * Formatação do campo de CPF enquanto o usuário digita, aplicando a máscara "XXX.XXX.XXX-XX".
+   * O método é acionado no evento de input do campo de CPF, garantindo que a formatação seja aplicada em tempo real conforme o usuário digita.
+   * O método remove quaisquer caracteres não numéricos do valor do campo, limita a entrada a 11 dígitos, e aplica a máscara progressivamente conforme o número de dígitos aumenta.
+   * Após formatar o valor, o método atualiza o campo de input com a máscara aplicada e também atualiza o valor do formulário reativo sem emitir um evento de mudança para evitar loops infinitos de formatação.
+   * OBS. O campo de CPF é desabilitado no modo de edição.
+  */
+  formatarCpf(event: Event): void {
+
+    /**
+     * Obtém o elemento de input a partir do evento de entrada, garantindo que seja do tipo HTMLInputElement para acessar as propriedades específicas de um campo de texto.*/ 
+    const input = event.target as HTMLInputElement;
+
+    let valor = input.value.replace(/\D/g, '');       // remove nao numericos
+    valor = valor.substring(0, 11);                   // limita a 11 digitos
+
+    // Aplica a máscara progressivamente conforme o usuário digita - XXX.XXX.XXX-XX
+    if (valor.length > 9) {
+      valor = valor.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+    } else if (valor.length > 6) {
+      valor = valor.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    } else if (valor.length > 3) {
+      valor = valor.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+    }
+
+    // Atualiza o valor do campo de input com a máscara aplicada
+    input.value = valor;
+
+    // Atualiza o valor do formulário reativo sem emitir um evento de mudança para evitar loops infinitos de formatação
+    this.form.get('cpf')?.setValue(valor, { emitEvent: false });
+  }
+
+  /**
+   * Formatação do campo de telefone enquanto o usuário digita, aplicando as máscaras (XX) XXXX-XXXX ou (XX) XXXXX-XXXX dependendo do 
+   * número de dígitos.
+  */
+  formatarTelefone(event: Event): void {
+
+    const input = event.target as HTMLInputElement;
+    let valor = input.value.replace(/\D/g, '');
+    valor = valor.substring(0, 11);
+
+    // Aplica a mascara progressivamente conforme o usuário digita - (XX) XXXX-XXXX ou (XX) XXXXX-XXXX
+    if (valor.length > 10) {
+      valor = valor.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else if (valor.length > 6) {
+      valor = valor.replace(/(\d{2})(\d{4,5})(\d{0,4})/, '($1) $2-$3');
+    } else if (valor.length > 2) {
+      valor = valor.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+    }
+
+    input.value = valor;
+    this.form.get('telefone')?.setValue(valor, { emitEvent: false });
+  }
 
   /**
    * Método de inicialização do componente.
@@ -185,6 +240,13 @@ export class PacienteFormComponent {
      * Garante que todos os dados necessários serão enviados para o backend.
      */
     const dados = this.form.getRawValue();
+
+    if (dados.cpf) {
+      dados.cpf = dados.cpf.replace(/\D/g, ''); // Remove a formatação do CPF antes de enviar para o backend
+    }
+    if (dados.telefone) {
+      dados.telefone = dados.telefone.replace(/\D/g, ''); // Remove a formatação do telefone antes de enviar para o backend
+    }
 
     /**
      * Determina qual método do serviço de paciente deve ser chamado com base no modo atual do formulário (cadastro ou edição).
