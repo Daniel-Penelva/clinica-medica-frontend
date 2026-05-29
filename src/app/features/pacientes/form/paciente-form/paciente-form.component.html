@@ -27,7 +27,7 @@
             <mat-card-content class="form-grid">
 
                 <!-- mat-form-field para cada campo -->
-                 <!-- Campo Nome -->
+                <!-- Campo Nome -->
                 <mat-form-field appearance="outline">
                     <mat-label>Nome completo *</mat-label>
                     <input matInput formControlName="nome">
@@ -58,13 +58,16 @@
                 <!-- Campo Telefone -->
                 <mat-form-field appearance="outline">
                     <mat-label>Telefone</mat-label>
-                    <input matInput formControlName="telefone" placeholder="(00) 00000-0000" maxlength="15" (input)="formatarTelefone($event)">
+                    <input matInput formControlName="telefone" placeholder="(00) 00000-0000" maxlength="15"
+                        (input)="formatarTelefone($event)">
                 </mat-form-field>
 
                 <!-- Campo Data Nascimento -->
                 <mat-form-field appearance="outline">
                     <mat-label>Data de Nascimento</mat-label>
-                    <input matInput formControlName="dataNascimento" type="date">
+                    <input matInput [matDatepicker]="pickerNascimento" formControlName="dataNascimento" placeholder="dd/mm/aaaa" readonly>
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerNascimento" />
+                    <mat-datepicker #pickerNascimento startView="multi-year" /> <!-- startView="multi-year" faz o calendário abrir na visão de anos -->
                 </mat-form-field>
 
                 <!-- Campo Sexo -->

@@ -21,6 +21,19 @@ import { Estado, ESTADOS_BRASILEIROS } from '../../../../core/models/estados.mod
 import { CepService } from '../../../../core/services/cep.service';
 import { PacienteService } from '../../../../core/services/paciente.service';
 
+// Novos imports
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+/**
+ * Registro do locale para português do Brasil, garantindo que as datas sejam exibidas no formato correto e que os componentes de 
+ * data do Angular Material funcionem adequadamente com a localidade brasileira.
+*/
+registerLocaleData(localePt)
+
 @Component({
   selector: 'app-paciente-form',
   standalone: true,
@@ -34,7 +47,9 @@ import { PacienteService } from '../../../../core/services/paciente.service';
     MatIconModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   templateUrl: './paciente-form.component.html',
   styleUrl: './paciente-form.component.css',
@@ -184,6 +199,9 @@ export class PacienteFormComponent {
    * Realiza uma chamada ao serviço para buscar os dados do paciente e preenche o formulário com as informações retornadas.
    * patchValue -> preenche formulário com dados do backend.
    * endereco ?? {} -> se não houver, usa objeto vazio.
+   * O "+ 'T00:00:00'" é adicionado para garantir que a data seja interpretada corretamente como uma data local, sem ele o javascript interpreta 
+   * a data como UTC e pode mostrar o dia anterior dependendo do fuso horário do usuário.
+   * Durante o carregamento, a variável "loading" é usada para exibir um spinner de carregamento no formulário, indicando que os dados estão sendo buscados.
    * Exibe uma mensagem de erro caso o paciente não seja encontrado e redireciona para a lista de pacientes.
    */
   carregarPaciente(id: number): void {
@@ -196,7 +214,7 @@ export class PacienteFormComponent {
           cpf: p.cpf,
           email: p.email,
           telefone: p.telefone,
-          dataNascimento: p.dataNascimento,
+          dataNascimento: p.dataNascimento ? new Date(p.dataNascimento + 'T00:00:00') : null, // Converte string para Date, adicionando horário para evitar problemas de fuso horário
           sexo: p.sexo,
           endereco: p.endereco ?? {},
         });
@@ -241,11 +259,31 @@ export class PacienteFormComponent {
      */
     const dados = this.form.getRawValue();
 
+    /**
+     * Limpa as máscaras de CPF e telefone antes de enviar os dados para o backend, garantindo que apenas os números sejam enviados, conforme esperado pela API.
+    */
     if (dados.cpf) {
       dados.cpf = dados.cpf.replace(/\D/g, ''); // Remove a formatação do CPF antes de enviar para o backend
     }
     if (dados.telefone) {
       dados.telefone = dados.telefone.replace(/\D/g, ''); // Remove a formatação do telefone antes de enviar para o backend
+    }
+
+    /**
+     * Formata a data de nascimento para o formato "YYYY-MM-DD" antes de enviar os dados para o backend, garantindo que a API receba a data no formato esperado.
+     * (1) Vai verificar se é a dataNasciemnto é realmente um objeto Date - decidir fazer dessa maneira porque evita erros se o valor já for null, undefined ou uma string.
+     * (2) Pega o objeto Date em 'd' para facilitar o acesso ao método getFullYear(), getMonth() e getDate().
+     * (3) Converter para yyyy-MM-dd
+     *    <code> dados.dataNascimento = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; </code>
+     *    (A) Ano: d.getFullYear() - retorna o ano completo (ex: 2000)
+     *    (B) Mês: String(d.getMonth() + 1).padStart(2, '0') - retorna o mês (0-11), então é somado mais 1 para obter o valor o mês real (1-12) 
+     *             e String(...).padStart(2, '0') para garantir que o mês seja sempre representado com dois dígitos (ex: "01" para janeiro).
+     *    (C) Dia: String(d.getDate()).padStart(2, '0') - retorna o dia do mês (1-31) e também é formatado para ter dois dígitos (ex: "05" para o dia 5).
+     * O resultado final é uma string no formato "YYYY-MM-DD" ("2000-01-05") que é o formato esperado pela API para a data de nascimento.
+     */
+    if (dados.dataNascimento instanceof Date) {
+      const d = dados.dataNascimento;
+      dados.dataNascimento = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
     /**
