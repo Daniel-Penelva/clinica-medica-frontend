@@ -1,0 +1,106 @@
+<div class="page-container">
+    <div class="page-header">
+        <div>
+            <h2>Medicos</h2>
+            <p>{{ totalElements }} medico(s) cadastrado(s)</p>
+        </div>
+        <!-- Se for admin habilita botão de 'novo' para add um novo médico -->
+        @if (authService.isAdmin()) {
+        <button mat-raised-button color="primary" (click)="novo()">
+            <mat-icon>add</mat-icon>
+            Novo Medico
+        </button>
+        }
+    </div>
+
+    <mat-card>
+        <mat-card-content>
+
+            <!--- Campo de pesquisa  -->
+            <mat-form-field appearance="outline" class="busca-field">
+                <mat-label>Buscar por nome</mat-label>
+                <input matInput [formControl]="buscaCtrl" placeholder="Digite o nome do medico...">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+            @if (loading) {
+            <div class="loading-container">
+                <mat-spinner diameter="40" />
+            </div>
+            }
+
+            @if (!loading) {
+            <table mat-table [dataSource]="dataSource" class="tabela-medicos">
+
+                <!-- Campo nome -->
+                <ng-container matColumnDef="nome">
+                    <th mat-header-cell *matHeaderCellDef>Nome</th>
+                    <td mat-cell *matCellDef="let m">{{ m.nome }}</td>
+                </ng-container>
+
+                <!-- Campo CRM -->
+                <ng-container matColumnDef="crm">
+                    <th mat-header-cell *matHeaderCellDef>CRM</th>
+                    <td mat-cell *matCellDef="let m">{{ m.crm }}</td>
+                </ng-container>
+
+                <!-- Campo Telefone -->
+                <ng-container matColumnDef="telefone">
+                    <th mat-header-cell *matHeaderCellDef>Telefone</th>
+                    <td mat-cell *matCellDef="let m">{{ m.telefone ?? '-' }}</td>
+                </ng-container>
+
+                <!-- Especialidades como chips -->
+                <ng-container matColumnDef="especialidades">
+                    <th mat-header-cell *matHeaderCellDef>Especialidades</th>
+                    <td mat-cell *matCellDef="let m">
+                        <mat-chip-set>
+                            @for (esp of m.especialidades; track esp.id) {
+                            <mat-chip>{{ esp.nome }}</mat-chip>
+                            }
+                        </mat-chip-set>
+                    </td>
+                </ng-container>
+
+                <!-- Coluna Status ativo/inativo (Exibe chip com CSS .chip-ativo (verde) ou .chip-inativo (vermelho).) -->
+                <ng-container matColumnDef="ativo">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let m">
+                        <mat-chip [class]="m.ativo ? 'chip-ativo' : 'chip-inativo'">
+                            {{ m.ativo ? 'Ativo' : 'Inativo' }}
+                        </mat-chip>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acoes">
+                    <th mat-header-cell *matHeaderCellDef>Acoes</th>
+                    <td mat-cell *matCellDef="let m">
+                        <button mat-icon-button color="primary" matTooltip="Editar" (click)="editar(m.id)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <!-- Somente para admin é habilitado o botão de desativação de médico -->
+                        @if (m.ativo && authService.isAdmin()) {
+                        <button mat-icon-button color="warn" matTooltip="Desativar" (click)="desativar(m)">
+                            <mat-icon>block</mat-icon>
+                        </button>
+                        }
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+                <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell sem-dados" [attr.colspan]="colunas.length">
+                        Nenhum medico encontrado.
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Paginacao - Controle de paginação integrado com onPageChange no componente. -->
+            <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageIndex]="pageIndex"
+                [pageSizeOptions]="[5, 10, 25]" (page)="onPageChange($event)" showFirstLastButtons>
+            </mat-paginator>
+            }
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -13,6 +13,7 @@ export const routes: Routes = [
             { path: 'pacientes', loadComponent: () => import('./features/pacientes/lista/pacientes-lista/pacientes-lista.component').then(m => m.PacientesListaComponent) },
             { path: 'pacientes/novo', loadComponent: () => import('./features/pacientes/form/paciente-form/paciente-form.component').then(m => m.PacienteFormComponent) },
             { path: 'pacientes/:id/editar', loadComponent: () => import('./features/pacientes/form/paciente-form/paciente-form.component').then(m => m.PacienteFormComponent) },
+            { path: 'medicos', loadComponent: () => import('./features/medicos/lista/medicos-lista/medicos-lista.component').then(m => m.MedicosListaComponent) },
         ]
     },
 
