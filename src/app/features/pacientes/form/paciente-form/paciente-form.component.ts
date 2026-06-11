@@ -175,6 +175,24 @@ export class PacienteFormComponent {
   }
 
   /**
+   * Para edição - Chamado para formatar dados vindo da API
+   * Garante que a formatação do telefone venha aplicada na edição
+  */
+  private aplicarMascaraTelefone(telefone: string): string {
+
+    let valor = telefone.replace(/\D/g, '').substring(0, 11);
+
+    if (valor.length > 10) {
+      return valor.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else if (valor.length > 6) {
+      return valor.replace(/(\d{2})(\d{4,5})(\d{0,4})/, '($1) $2-$3');
+    } else if (valor.length > 2) {
+      return valor.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+    }
+    return valor;
+  }
+
+  /**
    * Método de inicialização do componente.
    * Verifica se há um ID de paciente na rota para determinar se o formulário deve ser carregado em modo de edição ou cadastro.
    * Se um ID for encontrado, o método carregarPaciente é chamado para buscar os dados do paciente e preencher o formulário.
@@ -213,7 +231,7 @@ export class PacienteFormComponent {
           nome: p.nome,
           cpf: p.cpf,
           email: p.email,
-          telefone: p.telefone,
+          telefone: this.aplicarMascaraTelefone(p.telefone ?? ''),
           dataNascimento: p.dataNascimento ? new Date(p.dataNascimento + 'T00:00:00') : null, // Converte string para Date, adicionando horário para evitar problemas de fuso horário
           sexo: p.sexo,
           endereco: p.endereco ?? {},

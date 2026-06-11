@@ -1,0 +1,158 @@
+<div class="page-container">
+
+    <!-- Cabecalho -->
+    <div class="page-header">
+        <button mat-icon-button (click)="voltar()" matTooltip="Voltar">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>{{ titulo }}</h2>
+    </div>
+
+    <!-- Mostra spinner (Loading) enquanto busca dados do medico em modo de edição -->
+    @if (loading) {
+    <div class="loading-container">
+        <mat-spinner diameter="40" />
+    </div>
+    }
+
+    <!-- Formulário liga ao FormGroup reativo do MedicoFormComponent. Só mostra formulário quando não está carregando -->
+    @if (!loading) {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <!-- Dados do medico -->
+        <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>Dados do Medico</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="form-grid">
+
+                <!-- mat-form-field para cada campo -->
+                <!-- Campo Nome -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Nome completo *</mat-label>
+                    <input matInput formControlName="nome">
+                    @if (form.get('nome')?.invalid && form.get('nome')?.touched) {
+                    <mat-error>Nome e obrigatorio (min. 3 caracteres)</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Campo CRM -->
+                <mat-form-field appearance="outline">
+                    <mat-label>CRM *</mat-label>
+                    <input matInput formControlName="crm" placeholder="0000000">
+                    @if (form.get('crm')?.invalid && form.get('crm')?.touched) {
+                    <mat-error>CRM deve ter entre 4 e 7 digitos</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Campo E-mail -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" type="email">
+                    @if (form.get('email')?.invalid && form.get('email')?.touched) {
+                    <mat-error>Email invalido</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Campo Telefone com máscara -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Telefone</mat-label>
+                    <input matInput formControlName="telefone" placeholder="(00) 00000-0000" maxlength="15"
+                        (input)="formatarTelefone($event)">
+                </mat-form-field>
+
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Especialidades no CADASTRO (Só aparece em cadastro): mat-select multiplo | formControlName="especialidadeIds" = array de IDs ([1, 3, 5]). -->
+        @if (modo === 'cadastro') {
+        <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>Especialidades *</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Selecione as especialidades</mat-label>
+                    <mat-select formControlName="especialidadeIds" multiple>
+                        @for (esp of todasEspecialidades; track esp.id) {
+                        <mat-option [value]="esp.id">{{ esp.nome }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (form.get('especialidadeIds')?.invalid &&
+                    form.get('especialidadeIds')?.touched) {
+                    <mat-error>Selecione ao menos uma especialidade</mat-error>
+                    }
+                </mat-form-field>
+            </mat-card-content>
+        </mat-card>
+        }
+
+        <!-- Especialidades na EDICAO: chips com adicionar e remover -->
+        @if (modo === 'edicao') {
+        <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>Especialidades</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+                <!-- Chips das especialidades ja vinculadas. O usuário pode remover individualmente clicando no botão -->
+                <p class="label-chips">Especialidades atuais:</p>
+                <mat-chip-set class="chips-especialidades">
+                    @for (esp of especialidadesDoMedico; track esp.id) {
+                    <mat-chip (removed)="removerEspecialidade(esp.id)">
+                        {{ esp.nome }}
+                        <button matChipRemove matTooltip="Remover">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip>
+                    }
+                </mat-chip-set>
+
+                <mat-divider class="divider" />
+
+                <!-- Select para adicionar nova especialidade | especialidadesDisponiveis = getter que filtra especialidades não vinculadas | @if só mostra select se há opções disponíveis -->
+                @if (especialidadesDisponiveis.length > 0) {
+                <p class="label-chips">Adicionar especialidade:</p>
+                <div class="adicionar-esp">
+                    <mat-form-field appearance="outline" class="esp-select">
+                        <mat-label>Selecionar especialidade</mat-label>
+                        <mat-select #selectEsp> <!-- template reference variable para pegar valor selecionado -->
+                            @for (esp of especialidadesDisponiveis; track esp.id) {
+                            <mat-option [value]="esp.id">
+                                {{ esp.nome }}
+                            </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" type="button"
+                        (click)="adicionarEspecialidade(selectEsp.value)">
+                        <mat-icon>add</mat-icon>
+                        Adicionar
+                    </button>
+                </div>
+                } @else {
+                <p class="todas-vinculadas">
+                    Todas as especialidades ja estao vinculadas.
+                </p>
+                }
+
+            </mat-card-content>
+        </mat-card>
+        }
+
+        <!-- Botoes -->
+        <div class="form-actions">
+            <button mat-button type="button" (click)="voltar()">Cancelar</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="salvando">
+                @if (salvando) {
+                <mat-spinner diameter="20" />
+                } @else {
+                <mat-icon>save</mat-icon>
+                {{ modo === 'cadastro' ? 'Cadastrar' : 'Salvar' }}
+                }
+            </button>
+        </div>
+
+    </form>
+    }
+</div>

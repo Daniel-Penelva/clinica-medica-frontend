@@ -14,6 +14,8 @@ export const routes: Routes = [
             { path: 'pacientes/novo', loadComponent: () => import('./features/pacientes/form/paciente-form/paciente-form.component').then(m => m.PacienteFormComponent) },
             { path: 'pacientes/:id/editar', loadComponent: () => import('./features/pacientes/form/paciente-form/paciente-form.component').then(m => m.PacienteFormComponent) },
             { path: 'medicos', loadComponent: () => import('./features/medicos/lista/medicos-lista/medicos-lista.component').then(m => m.MedicosListaComponent) },
+            { path: 'medicos/novo', loadComponent: () => import('./features/medicos/form/medico-form/medico-form.component').then(m => m.MedicoFormComponent) },
+            { path: 'medicos/:id/editar', loadComponent: () => import('./features/medicos/form/medico-form/medico-form.component').then(m => m.MedicoFormComponent) },
         ]
     },
 

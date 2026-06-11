@@ -1,0 +1,76 @@
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #1A3C5E;
+    margin: 0;
+}
+
+.form-card {
+    margin-bottom: 24px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 16px 0;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 60px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+/* Especialidades - chips */
+.label-chips {
+    font-size: 14px;
+    color: #555;
+    margin: 8px 0 6px;
+    font-weight: 500;
+}
+
+.chips-especialidades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.divider {
+    margin: 16px 0;
+}
+
+.adicionar-esp {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.esp-select {
+    flex: 1;
+}
+
+.todas-vinculadas {
+    color: #4caf50;
+    font-size: 14px;
+    font-style: italic;
+}
