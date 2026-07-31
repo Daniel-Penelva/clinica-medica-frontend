@@ -16,6 +16,7 @@ export const routes: Routes = [
             { path: 'medicos', loadComponent: () => import('./features/medicos/lista/medicos-lista/medicos-lista.component').then(m => m.MedicosListaComponent) },
             { path: 'medicos/novo', loadComponent: () => import('./features/medicos/form/medico-form/medico-form.component').then(m => m.MedicoFormComponent) },
             { path: 'medicos/:id/editar', loadComponent: () => import('./features/medicos/form/medico-form/medico-form.component').then(m => m.MedicoFormComponent) },
+            { path: 'consultas', loadComponent: () => import('./features/consultas/lista/consultas-lista/consultas-lista.component').then(m => m.ConsultasListaComponent) },
         ]
     },
 

@@ -1,0 +1,119 @@
+<div class="page-container">
+    <div class="page-header">
+        <div>
+            <h2>Consultas</h2>
+            <p>{{ totalElements }} consulta(s) no sistema</p>
+        </div>
+        @if (authService.isAdmin() ||
+        authService.currentRole() === 'RECEPCIONISTA') {
+        <button mat-raised-button color="primary" (click)="novaConsulta()">
+            <mat-icon>add</mat-icon>
+            Agendar Consulta
+        </button>
+        }
+        <!-- Essa condição verifica se o usuário é ADMIN ou se é RECEPCIONISTA -->
+    </div>
+
+    <mat-card>
+        <mat-card-content>
+
+            @if (loading) {
+            <div class="loading-container"><mat-spinner diameter="40" /></div>
+            }
+
+            @if (!loading) {
+            <table mat-table [dataSource]="dataSource" class="tabela-consultas">
+
+                <!-- Coluna data/hora -->
+                <ng-container matColumnDef="dataHora">
+                    <th mat-header-cell *matHeaderCellDef>Data / Hora</th>
+                    <td mat-cell *matCellDef="let c">
+                        <strong>{{ c.dataHora | date:'dd/MM/yyyy' }}</strong><br>
+                        <small>{{ c.dataHora | date:'HH:mm' }}</small>
+                    </td>
+                </ng-container>
+
+                <!-- Coluna paciente -->
+                <ng-container matColumnDef="paciente">
+                    <th mat-header-cell *matHeaderCellDef>Paciente</th>
+                    <td mat-cell *matCellDef="let c">{{ c.nomePaciente }}</td>
+                </ng-container>
+
+                <!-- Coluna medico -->
+                <ng-container matColumnDef="medico">
+                    <th mat-header-cell *matHeaderCellDef>Medico</th>
+                    <td mat-cell *matCellDef="let c">
+                        {{ c.nomeMedico }}<br>
+                        <small>CRM: {{ c.crmMedico }}</small>
+                    </td>
+                </ng-container>
+
+                <!-- Coluna status -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let c">
+                        <mat-chip [class]="getStatusClass(c.status)">
+                            {{ getStatusLabel(c.status) }}
+                        </mat-chip>
+                    </td>
+                </ng-container>
+
+                <!-- Acoes variam conforme status e role -->
+                <ng-container matColumnDef="acoes">
+                    <th mat-header-cell *matHeaderCellDef>Acoes</th>
+                    <td mat-cell *matCellDef="let c">
+
+                        <!-- Confirmar: AGENDADA + ADMIN/RECEP -->
+                        @if (c.status === 'AGENDADA'&&
+                        (authService.isAdmin() ||
+                        authService.currentRole() === 'RECEPCIONISTA')) {
+                        <button mat-icon-button color="primary" matTooltip="Confirmar presenca" (click)="confirmar(c)">
+                            <mat-icon>check_circle</mat-icon>
+                        </button>
+                        }
+
+                        <!-- Realizar: AGENDADA ou CONFIRMADA + MEDICO -->
+                        @if ((c.status === 'AGENDADA' || c.status === 'CONFIRMADA') &&
+                        authService.currentRole() === 'MEDICO') {
+                        <button mat-icon-button color="accent" matTooltip="Marcar como realizada" (click)="realizar(c)">
+                            <mat-icon>done_all</mat-icon>
+                        </button>
+                        }
+
+                        <!-- Cancelar: nao REALIZADA e nao CANCELADA + ADMIN/RECEP -->
+                        @if (c.status !== 'REALIZADA'&& c.status !== 'CANCELADA'&&
+                        (authService.isAdmin() ||
+                        authService.currentRole() === 'RECEPCIONISTA')) {
+                        <button mat-icon-button color="warn" matTooltip="Cancelar" (click)="cancelar(c)">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        }
+
+                        <!-- Nao compareceu: AGENDADA ou CONFIRMADA + ADMIN/RECEP -->
+                        @if ((c.status === 'AGENDADA' || c.status === 'CONFIRMADA') &&
+                        (authService.isAdmin() ||
+                        authService.currentRole() === 'RECEPCIONISTA')) {
+                        <button mat-icon-button matTooltip="Nao compareceu" (click)="naoCompareceu(c)">
+                            <mat-icon>person_off</mat-icon>
+                        </button>
+                        }
+
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+                <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell sem-dados" [attr.colspan]="colunas.length">
+                        Nenhuma consulta encontrada.
+                    </td>
+                </tr>
+            </table>
+
+            <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageIndex]="pageIndex"
+                [pageSizeOptions]="[5, 10, 25, 50]" (page)="onPageChange($event)" showFirstLastButtons>
+            </mat-paginator>
+            }
+        </mat-card-content>
+    </mat-card>
+</div>

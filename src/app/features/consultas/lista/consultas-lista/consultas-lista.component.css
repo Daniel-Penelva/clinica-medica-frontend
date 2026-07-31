@@ -1,0 +1,61 @@
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #1A3C5E;
+    margin: 0;
+}
+
+.page-header p {
+    color: #666;
+    font-size: 14px;
+    margin: 4px 0 0;
+}
+
+.tabela-consultas {
+    width: 100%;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.sem-dados {
+    text-align: center;
+    padding: 32px;
+    color: #999;
+}
+
+/* Chips de status - cada um com cor especifica */
+.chip-agendada {
+    background-color: #e3f2fd !important;
+    color: #1565c0 !important;
+}
+
+.chip-confirmada {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+}
+
+.chip-realizada {
+    background-color: #f3e5f5 !important;
+    color: #6a1b9a !important;
+}
+
+.chip-cancelada {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+}
+
+.chip-nao-compareceu {
+    background-color: #fff3e0 !important;
+    color: #e65100 !important;
+}
