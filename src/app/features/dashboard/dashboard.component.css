@@ -1,0 +1,153 @@
+.titulo-dash {
+  font-size: 24px;
+  font-weight: 500;
+  color: #1a3c5e;
+  margin: 0 0 24px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+/* Grid dos 4 cards de resumo */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card-resumo mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px !important;
+}
+
+.card-resumo mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  opacity: 0.9;
+}
+
+.card-resumo div {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-numero {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.card-label {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+/* Cores dos cards */
+.card-azul {
+  background: linear-gradient(135deg, #1a3c5e, #2e75b6) !important;
+  color: white !important;
+}
+.card-verde {
+  background: linear-gradient(135deg, #1b5e20, #388e3c) !important;
+  color: white !important;
+}
+.card-laranja {
+  background: linear-gradient(135deg, #e65100, #f57c00) !important;
+  color: white !important;
+}
+.card-roxo {
+  background: linear-gradient(135deg, #4a148c, #7b1fa2) !important;
+  color: white !important;
+}
+.card-azul mat-icon,
+.card-verde mat-icon,
+.card-laranja mat-icon,
+.card-roxo mat-icon {
+  color: white;
+}
+
+/* Grid inferior: agenda + proximas lado a lado */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.tabela-agenda {
+  width: 100%;
+}
+
+/* Item da lista de proximas consultas */
+.proxima-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.proxima-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+  color: #1a3c5e;
+  font-size: 14px;
+}
+
+.proxima-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.proxima-info small {
+  color: #666;
+  font-size: 12px;
+}
+
+.sem-dados {
+  text-align: center;
+  color: #999;
+  padding: 24px;
+}
+
+/* Chips de status (mesmos da lista de consultas) */
+.chip-agendada {
+  background-color: #e3f2fd !important;
+  color: #1565c0 !important;
+}
+.chip-confirmada {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+.chip-realizada {
+  background-color: #f3e5f5 !important;
+  color: #6a1b9a !important;
+}
+.chip-cancelada {
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+}
+.chip-nao-compareceu {
+  background-color: #fff3e0 !important;
+  color: #e65100 !important;
+}
+
+/* Responsivo: em telas menores empilha os cards */
+@media (max-width: 900px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
