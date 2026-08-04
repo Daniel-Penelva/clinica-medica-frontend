@@ -1,0 +1,88 @@
+<div class="page-container">
+    <div class="page-header">
+        <button mat-icon-button (click)="voltar()" matTooltip="Voltar">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>Agendar Consulta</h2>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>Dados do Agendamento</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="form-grid">
+
+                <!-- Selecao de Paciente -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Paciente *</mat-label>
+                    <mat-select formControlName="pacienteId">
+                        @for (p of pacientes; track p.id) {
+                        <mat-option [value]="p.id">
+                            {{ p.nome }} - CPF: {{ p.cpf }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                    @if (form.get('pacienteId')?.invalid &&
+                    form.get('pacienteId')?.touched) {
+                    <mat-error>Selecione o paciente</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Selecao de Medico -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Medico *</mat-label>
+                    <mat-select formControlName="medicoId">
+                        @for (m of medicos; track m.id) {
+                        <mat-option [value]="m.id">
+                            {{ m.nome }} - CRM: {{ m.crm }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                    @if (form.get('medicoId')?.invalid &&
+                    form.get('medicoId')?.touched) {
+                    <mat-error>Selecione o medico</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Data com MatDatepicker -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Data *</mat-label>
+                    <input matInput [matDatepicker]="pickerData" formControlName="data" [min]="minDate"
+                        placeholder="dd/mm/aaaa" readonly>
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerData" />
+                    <mat-datepicker #pickerData />
+                    @if (form.get('data')?.invalid && form.get('data')?.touched) {
+                    <mat-error>Selecione a data</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Hora como mat-select com horarios fixos -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Horario *</mat-label>
+                    <mat-select formControlName="hora">
+                        @for (h of horasDisponiveis; track h) {
+                        <mat-option [value]="h">{{ h }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (form.get('hora')?.invalid && form.get('hora')?.touched) {
+                    <mat-error>Selecione o horario</mat-error>
+                    }
+                </mat-form-field>
+
+            </mat-card-content>
+        </mat-card>
+
+        <div class="form-actions">
+            <button mat-button type="button" (click)="voltar()">Cancelar</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="salvando">
+                @if (salvando) {
+                <mat-spinner diameter="20" />
+                } @else {
+                <mat-icon>event</mat-icon>
+                Agendar
+                }
+            </button>
+        </div>
+    </form>
+</div>
