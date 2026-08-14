@@ -1,0 +1,64 @@
+<div class="page-container">
+    <div class="page-header">
+        <div>
+            <h2>Convenios</h2>
+            <p>{{ dataSource.data.length }} convenio(s) cadastrado(s)</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="novo()">
+            <mat-icon>add</mat-icon> Novo Convenio
+        </button>
+    </div>
+
+    <mat-card>
+        <mat-card-content>
+            @if (loading) {
+            <div class="loading-container"><mat-spinner diameter="40" /></div>
+            }
+            @if (!loading) {
+            <table mat-table [dataSource]="dataSource" class="tabela-full">
+
+                <ng-container matColumnDef="nome">
+                    <th mat-header-cell *matHeaderCellDef>Nome</th>
+                    <td mat-cell *matCellDef="let c">{{ c.nome }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="registro">
+                    <th mat-header-cell *matHeaderCellDef>Registro</th>
+                    <td mat-cell *matCellDef="let c">{{ c.registro }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="ativo">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let c">
+                        <mat-chip [class]="c.ativo ? 'chip-ativo' : 'chip-inativo'">
+                            {{ c.ativo ? 'Ativo' : 'Inativo' }}
+                        </mat-chip>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acoes">
+                    <th mat-header-cell *matHeaderCellDef>Acoes</th>
+                    <td mat-cell *matCellDef="let c">
+                        <button mat-icon-button color="primary" matTooltip="Editar" (click)="editar(c.id)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        @if (c.ativo) {
+                        <button mat-icon-button color="warn" matTooltip="Desativar" (click)="desativar(c)">
+                            <mat-icon>block</mat-icon>
+                        </button>
+                        }
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+                <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell sem-dados" [attr.colspan]="colunas.length">
+                        Nenhum convenio encontrado.
+                    </td>
+                </tr>
+            </table>
+            }
+        </mat-card-content>
+    </mat-card>
+</div>

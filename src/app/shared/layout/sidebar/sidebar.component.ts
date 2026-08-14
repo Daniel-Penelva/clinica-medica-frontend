@@ -55,6 +55,7 @@ export class SidebarComponent {
       roles: ['ADMIN'],
     },
     { label: 'Consultas', icon: 'event_note', route: '/consultas' },
+    { label: 'Convenios', icon: 'health_and_safety', route: '/convenios', roles: ['ADMIN'] },
     {
       label: 'Relatorios',
       icon: 'bar_chart',
