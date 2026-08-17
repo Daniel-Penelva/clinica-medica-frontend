@@ -19,6 +19,8 @@ export const routes: Routes = [
             { path: 'consultas', loadComponent: () => import('./features/consultas/lista/consultas-lista/consultas-lista.component').then(m => m.ConsultasListaComponent) },
             { path: 'consultas/nova', loadComponent: () => import('./features/consultas/form/consulta-form/consulta-form.component').then(m => m.ConsultaFormComponent) },
             { path: 'convenios', loadComponent: () => import('./features/convenios/lista/convenios-lista/convenios-lista.component').then(m => m.ConveniosListaComponent) },
+            { path: 'convenios/novo', loadComponent: () => import('./features/convenios/form/convenio-form/convenio-form.component').then(m => m.ConvenioFormComponent) },
+            { path: 'convenios/:id/editar', loadComponent: () => import('./features/convenios/form/convenio-form/convenio-form.component').then(m => m.ConvenioFormComponent) },
         ]
     },
 
