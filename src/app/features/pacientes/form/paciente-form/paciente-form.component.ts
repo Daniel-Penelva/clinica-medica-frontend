@@ -27,6 +27,8 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { ConvenioService } from '../../../../core/services/convenio.service';
+import { ConvenioResponse } from '../../../../core/models/convenio.model';
 
 /**
  * Registro do locale para português do Brasil, garantindo que as datas sejam exibidas no formato correto e que os componentes de 
@@ -64,6 +66,7 @@ export class PacienteFormComponent {
   private pacienteService = inject(PacienteService);
   private snackBar = inject(MatSnackBar);
   private cepService = inject(CepService);
+  private convenioService = inject(ConvenioService);
 
   /**
    * Variáveis de estado do componente:
@@ -74,6 +77,7 @@ export class PacienteFormComponent {
    * 'estados' para preencher o select de estados no formulário de endereço - Lista de estados para o campo de UF no formulário de endereço
    * 'buscandoCep' para mostrar um spinner de carregamento enquanto busca os dados do CEP
    * 'cepNaoEncontrado' para exibir uma mensagem de erro caso o CEP informado não seja encontrado na base do ViaCEP
+   * 'convenios' para preencher o select de nome e registro no formulário de convenio - Lista de convenios para o campo de nome e registro no formulário de convênio
    */
   modo: 'cadastro' | 'edicao' = 'cadastro';
   pacienteId: number | null = null;
@@ -83,6 +87,7 @@ export class PacienteFormComponent {
   estados: Estado[] = ESTADOS_BRASILEIROS;
   buscandoCep = false;
   cepNaoEncontrado = false;
+  convenios: ConvenioResponse[] = [];
 
   /**
    * Lista de opções para o campo de sexo do paciente.
@@ -108,6 +113,7 @@ export class PacienteFormComponent {
     telefone: ['', Validators.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/)], // Validação COM máscara
     dataNascimento: [''],
     sexo: [''],
+    convenioId: [null],
     endereco: this.fb.group({
       logradouro: [''],
       numero: [''],
@@ -201,6 +207,11 @@ export class PacienteFormComponent {
   */
   ngOnInit(): void {
 
+    // Carrega lista de convenios ativos
+    this.convenioService.listar().subscribe(
+      lista => this.convenios = lista.filter(c => c.ativo)
+    );
+
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
@@ -234,6 +245,7 @@ export class PacienteFormComponent {
           telefone: this.aplicarMascaraTelefone(p.telefone ?? ''),
           dataNascimento: p.dataNascimento ? new Date(p.dataNascimento + 'T00:00:00') : null, // Converte string para Date, adicionando horário para evitar problemas de fuso horário
           sexo: p.sexo,
+          convenio: p.convenio,
           endereco: p.endereco ?? {},
         });
         this.loading = false;

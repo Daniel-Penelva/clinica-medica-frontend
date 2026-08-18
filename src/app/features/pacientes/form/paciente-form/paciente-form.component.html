@@ -86,7 +86,7 @@
         <!-- Endereco -->
         <mat-card class="form-card" formGroupName="endereco">
             <mat-card-header>
-                <mat-card-title>Endereco</mat-card-title>
+                <mat-card-title>Endereço</mat-card-title>
             </mat-card-header>
             <mat-card-content class="form-grid">
 
@@ -161,8 +161,37 @@
                         }
                     </mat-select>
                 </mat-form-field>
-
             </mat-card-content>
+        </mat-card>
+
+        <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>Convênio</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="form-grid">
+
+                <!-- Convenio -->
+                 <mat-form-field appearance="outline">
+                    <mat-label>Convenio</mat-label>
+                    <mat-select formControlName="convenioId">
+                        <mat-option [value]="null">Particular (sem convenio)</mat-option>
+                        @for (conv of convenios; track conv.id) {
+                            <mat-option [value]="conv.id">{{ conv.nome }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </mat-card-content>
+
+            <!-- OBS. Para que serve o track?
+                O track serve como identificador para cada item da lista para otimizar a renderização. 
+                track conv.id
+                Significa: use o id como identificador único de cada item.
+                
+                Por que isso é importante? Quando a lista convenios é atualizada (ex: um novo convênio é adicionado), o Angular precisa 
+                decidir o que fazer com os elementos na tela:
+                SEM track (ou com track $index): Angular destroi TODOS os mat-option e recria do zero - menos eficiente
+                COM track conv.id: Angular compara os IDs e atualiza APENAS o que mudou - mais eficiente
+            -->
         </mat-card>
 
         <!-- Botoes de acao -->
