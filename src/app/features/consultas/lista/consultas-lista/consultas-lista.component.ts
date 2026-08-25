@@ -116,13 +116,6 @@ export class ConsultasListaComponent {
   }
 
   /**
-   * Método para navegar para a página de nova consulta
-  */
-  novaConsulta(): void {
-    this.router.navigate(['/consultas/nova']);
-  }
-
-  /**
    * Método para obter a classe CSS correspondente ao status da consulta
    * Utiliza um Record para mapear os status para as classes CSS
    * Retorna a classe CSS correspondente ao status ou uma string vazia caso o status não seja reconhecido
@@ -258,6 +251,23 @@ export class ConsultasListaComponent {
   private mostrarErro(err: any): void {
     const msg = err.error?.message ?? 'Erro ao processar acao';
     this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['snack-error'] });
+  }
+
+  /**
+   * Método para navegar para a página de nova consulta
+  */
+  novaConsulta(): void {
+    this.router.navigate(['/consultas/nova']);
+  }
+
+  // Navega para criar prontuario (so MEDICO, consulta REALIZADA sem prontuario)
+  criarProntuario(consultaId: number): void {
+    this.router.navigate(['/prontuarios/nova'], { queryParams: { consultaId } });
+  }
+
+  // Navega para visualizar prontuario existente
+  verProntuario(consultaId: number): void {
+    this.router.navigate(['/prontuarios/consulta', consultaId]);
   }
 
 }

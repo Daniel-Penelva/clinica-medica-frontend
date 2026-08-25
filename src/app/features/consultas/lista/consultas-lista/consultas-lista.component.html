@@ -98,6 +98,29 @@
                         </button>
                         }
 
+                        <!-- Criar prontuario: REALIZADA + sem prontuario + MEDICO -->
+                        @if (c.status === 'REALIZADA' &&
+                            !c.temProntuario &&
+                            authService.currentRole() === 'MEDICO') {
+                        <button mat-icon-button color="primary"
+                                matTooltip="Criar prontuario"
+                                (click)="criarProntuario(c.id)">
+                            <mat-icon>note_add</mat-icon>
+                        </button>
+                        }
+
+                        <!-- Ver prontuario: REALIZADA + com prontuario + MEDICO ou ADMIN -->
+                        @if (c.status === 'REALIZADA' &&
+                            c.temProntuario &&
+                            (authService.currentRole() === 'MEDICO' ||
+                            authService.isAdmin())) {
+                        <button mat-icon-button color="accent"
+                                matTooltip="Ver prontuario"
+                                (click)="verProntuario(c.id)">
+                            <mat-icon>description</mat-icon>
+                        </button>
+                        }
+
                     </td>
                 </ng-container>
 
