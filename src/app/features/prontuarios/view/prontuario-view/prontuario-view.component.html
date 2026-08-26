@@ -1,0 +1,91 @@
+<div class="page-container">
+    <div class="page-header">
+        <button mat-icon-button (click)="voltar()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>Prontuario Medico</h2>
+    </div>
+
+    @if (loading) {
+    <div class="loading-container"><mat-spinner diameter="40" /></div>
+    }
+
+    @if (!loading && prontuario) {
+
+    <!-- Informacoes da consulta -->
+    <mat-card class="info-card">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>event_note</mat-icon>
+            <mat-card-title>Informacoes da Consulta</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Paciente</span>
+                <span class="info-value">{{ prontuario.nomePaciente }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Medico</span>
+                <span class="info-value">{{ prontuario.nomeMedico }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Data da Consulta</span>
+                <span class="info-value">
+                    {{ prontuario.dataConsulta | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Criado em</span>
+                <span class="info-value">
+                    {{ prontuario.criadoEm | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Conteudo medico -->
+    <mat-card class="prontuario-card">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>medical_information</mat-icon>
+            <mat-card-title>Registro Medico</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+            <div class="secao">
+                <h3>Anamnese</h3>
+                <p>{{ prontuario.anamnese }}</p>
+            </div>
+            <mat-divider />
+
+            <div class="secao">
+                <h3>Diagnostico</h3>
+                <p>{{ prontuario.diagnostico }}</p>
+            </div>
+            <mat-divider />
+
+            @if (prontuario.prescricao) {
+            <div class="secao">
+                <h3>Prescricao</h3>
+                <p>{{ prontuario.prescricao }}</p>
+            </div>
+            <mat-divider />
+            }
+
+            @if (prontuario.observacoes) {
+            <div class="secao">
+                <h3>Observacoes</h3>
+                <p>{{ prontuario.observacoes }}</p>
+            </div>
+            }
+
+        </mat-card-content>
+        @if (authService.isMedico()) {
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="editarProntuario()">
+                <mat-icon>edit</mat-icon>
+                Editar Prontuario
+            </button>
+        </mat-card-actions>
+        }
+    </mat-card>
+    }
+</div>

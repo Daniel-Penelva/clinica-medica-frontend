@@ -23,6 +23,7 @@ export const routes: Routes = [
             { path: 'convenios/:id/editar', loadComponent: () => import('./features/convenios/form/convenio-form/convenio-form.component').then(m => m.ConvenioFormComponent) },
             { path: 'prontuarios/nova', loadComponent: () => import('./features/prontuarios/form/prontuario-form/prontuario-form.component').then(m => m.ProntuarioFormComponent) },
             { path: 'prontuarios/:id/editar', loadComponent: () => import('./features/prontuarios/form/prontuario-form/prontuario-form.component').then(m => m.ProntuarioFormComponent) },
+            { path: 'prontuarios/consulta/:consultaId', loadComponent: () => import('./features/prontuarios/view/prontuario-view/prontuario-view.component').then(m => m.ProntuarioViewComponent) },
         ]
     },
 
