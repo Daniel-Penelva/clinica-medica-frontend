@@ -1,0 +1,70 @@
+<div class="page-container">
+    <div class="page-header">
+        <button mat-icon-button (click)="voltar()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div>
+            <h2>Historico do Paciente</h2>
+            @if (paciente) {
+            <p>{{ paciente.nome }} | CPF: {{ paciente.cpf }}</p>
+            }
+        </div>
+    </div>
+
+    @if (loading) {
+    <div class="loading-container"><mat-spinner diameter="40" /></div>
+    }
+
+    @if (!loading) {
+    @if (consultas.length === 0) {
+    <mat-card>
+        <mat-card-content>
+            <p class="sem-dados">
+                Nenhuma consulta realizada encontrada para este paciente.
+            </p>
+        </mat-card-content>
+    </mat-card>
+    }
+
+    @for (consulta of consultas; track consulta.id) {
+    <mat-card class="consulta-card">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>event_note</mat-icon>
+            <mat-card-title>
+                {{ consulta.dataHora | date:'dd/MM/yyyy' }} as
+                {{ consulta.dataHora | date:'HH:mm' }}
+            </mat-card-title>
+            <mat-card-subtitle>
+                Dr(a). {{ consulta.nomeMedico }} | CRM: {{ consulta.crmMedico }}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-chip class="chip-realizada">Realizada</mat-chip>
+            @if (consulta.temProntuario) {
+            <mat-chip class="chip-com-prontuario">Com Prontuario</mat-chip>
+            } @else {
+            <mat-chip class="chip-sem-prontuario">Sem Prontuario</mat-chip>
+            }
+        </mat-card-content>
+        <mat-card-actions>
+            @if (consulta.temProntuario) {
+            <button mat-button color="primary" (click)="verProntuario(consulta.id)">
+                <mat-icon>description</mat-icon>
+                Ver Prontuario
+            </button>
+            } @else {
+            <button mat-button color="accent" (click)="criarProntuario(consulta.id)">
+                <mat-icon>add</mat-icon>
+                Criar Prontuario
+            </button>
+            }
+        </mat-card-actions>
+    </mat-card>
+    <mat-divider />
+    }
+
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25]" (page)="onPageChange($event)">
+    </mat-paginator>
+    }
+</div>

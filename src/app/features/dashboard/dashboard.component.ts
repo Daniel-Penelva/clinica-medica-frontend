@@ -13,6 +13,14 @@ import { Router } from '@angular/router';
 import { ConsultaHoje, ConsultasPorEspecialidade, ConsultasPorMes, DashboardResumo } from '../../core/models/dashboard.model';
 import { forkJoin } from 'rxjs';
 
+// Adicionar imports para o registro do locale pt-BR
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { LOCALE_ID } from '@angular/core';
+
+// Registrar o locale pt-BR para que as datas sejam exibidas no formato correto
+registerLocaleData(localePt);
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -25,6 +33,13 @@ import { forkJoin } from 'rxjs';
     MatChipsModule,
     MatDividerModule,
     MatTableModule,
+  ],
+  providers: [
+    {
+      // Adicionar o provider para o LOCALE_ID com o valor 'pt-BR'
+      provide: LOCALE_ID,
+      useValue: 'pt-BR',
+    },
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',

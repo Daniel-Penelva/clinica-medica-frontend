@@ -24,6 +24,7 @@ export const routes: Routes = [
             { path: 'prontuarios/nova', loadComponent: () => import('./features/prontuarios/form/prontuario-form/prontuario-form.component').then(m => m.ProntuarioFormComponent) },
             { path: 'prontuarios/:id/editar', loadComponent: () => import('./features/prontuarios/form/prontuario-form/prontuario-form.component').then(m => m.ProntuarioFormComponent) },
             { path: 'prontuarios/consulta/:consultaId', loadComponent: () => import('./features/prontuarios/view/prontuario-view/prontuario-view.component').then(m => m.ProntuarioViewComponent) },
+            { path: 'pacientes/:id/historico', loadComponent: () => import('./features/prontuarios/historico/historico-paciente/historico-paciente.component').then(m => m.HistoricoPacienteComponent) },
         ]
     },
 

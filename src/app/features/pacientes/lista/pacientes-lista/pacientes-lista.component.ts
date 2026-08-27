@@ -184,4 +184,12 @@ export class PacientesListaComponent {
       });
     });
   }
+
+  /**
+   * Método para navegar para página de visualização do histórico
+  */
+  verHistorico(id: number): void {
+  this.router.navigate(['/pacientes', id, 'historico']);
+}
+
 }

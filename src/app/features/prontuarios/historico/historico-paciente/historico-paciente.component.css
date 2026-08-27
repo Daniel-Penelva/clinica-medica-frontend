@@ -1,0 +1,15 @@
+.consulta-card {
+  margin-bottom: 16px;
+}
+.chip-realizada {
+  background-color: #f3e5f5 !important;
+  color: #6a1b9a !important;
+}
+.chip-com-prontuario {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+.chip-sem-prontuario {
+  background-color: #fff3e0 !important;
+  color: #e65100 !important;
+}
