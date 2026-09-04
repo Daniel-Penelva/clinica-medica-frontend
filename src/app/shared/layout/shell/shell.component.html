@@ -11,7 +11,23 @@
 
     <!-- Conteudo da pagina ativa -->
     <mat-sidenav-content class="main-content">
-      <router-outlet />
+
+      <!-- Wrapper que empurra o rodape para baixo -->
+      <div class="content-wrapper">
+        <router-outlet />
+      </div>
+
+      <!-- Rodape Sempre no Final -->
+      <footer class="footer">
+        <span>Sistema de Gestao de Clinica Medica</span>
+        <span class="separador">|</span>
+        <span>© 2026 Copyright: Daniel Penelva de Andrade</span>
+        <span class="separador">|</span>
+        <span>Todos os direitos reservados</span>
+        <span class="separador">|</span>
+        <span>v1.0.0</span>
+      </footer>
+
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
