@@ -1,0 +1,93 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h2>Usuarios do Sistema</h2>
+      <p>{{ dataSource.data.length }} usuario(s) cadastrado(s)</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="novo()">
+      <mat-icon>person_add</mat-icon>
+      Novo Usuario
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      @if (loading) {
+        <div class="loading-container"><mat-spinner diameter="40" /></div>
+      }
+      @if (!loading) {
+        <table mat-table [dataSource]="dataSource" class="tabela-full">
+
+          <!-- coluna do nome -->
+          <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef>Nome</th>
+            <td mat-cell *matCellDef="let u">{{ u.nome }}</td>
+          </ng-container>
+
+          <!-- coluna do email -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+          </ng-container>
+
+          <!-- 
+            coluna do role
+            getRoleClass(u.role) vai converter o role em uma classe CSS específica para aplicação da aparência visual correspondente ao perfil.
+            getRoleLabel(u.role) vai converte o valor técnico do role em um texto amigável para ser apresentado na tela.
+          -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Perfil</th>
+            <td mat-cell *matCellDef="let u">
+              <mat-chip [class]="getRoleClass(u.role)">
+                {{ getRoleLabel(u.role) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- coluna do ativo -->
+          <ng-container matColumnDef="ativo">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let u">
+              <mat-chip [class]="u.ativo ? 'chip-ativo' : 'chip-inativo'">
+                {{ u.ativo ? "Ativo" : "Inativo" }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- coluna das ações dos botões -->
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Acoes</th>
+            <td mat-cell *matCellDef="let u">
+              <button
+                mat-icon-button
+                color="primary"
+                matTooltip="Editar"
+                (click)="editar(u.id)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              @if (u.ativo && u.email !== authService.getEmail()) {
+                <button
+                  mat-icon-button
+                  color="warn"
+                  matTooltip="Desativar"
+                  (click)="desativar(u)"
+                >
+                  <mat-icon>block</mat-icon>
+                </button>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+          <tr mat-row *matRowDef="let row; columns: colunas"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell sem-dados" [attr.colspan]="colunas.length">
+              Nenhum usuario encontrado.
+            </td>
+          </tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

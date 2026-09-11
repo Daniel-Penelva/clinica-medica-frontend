@@ -62,6 +62,12 @@ export class SidebarComponent {
       route: '/relatorios',
       roles: ['ADMIN'],
     },
+    {
+      label: 'Usuarios',
+      icon: 'manage_accounts',   
+      route: '/usuarios',
+      roles: ['ADMIN']
+    },
   ];
 
   /**
