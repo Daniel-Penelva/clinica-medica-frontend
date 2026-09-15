@@ -27,6 +27,8 @@ export const routes: Routes = [
             { path: 'pacientes/:id/historico', loadComponent: () => import('./features/prontuarios/historico/historico-paciente/historico-paciente.component').then(m => m.HistoricoPacienteComponent) },
             { path: 'relatorios', canActivate: [() => roleGuard('ADMIN')], loadComponent: () => import('./features/relatorios/relatorios.component').then(m => m.RelatoriosComponent) },
             { path: 'usuarios', loadComponent: () => import('./features/usuarios/lista/usuarios-lista/usuarios-lista.component').then(m => m.UsuariosListaComponent) },
+            { path: 'usuarios/novo', loadComponent: () => import('./features/usuarios/form/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent) },
+            { path: 'usuarios/:id/editar', loadComponent: () => import('./features/usuarios/form/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent) },
         ]
     },
 
