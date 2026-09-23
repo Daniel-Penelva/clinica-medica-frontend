@@ -9,6 +9,7 @@ import {
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -30,6 +31,7 @@ import { AuthService } from '../../core/auth/auth.service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatDividerModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -116,6 +118,32 @@ export class LoginComponent {
         this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['snack-error'] });
       },
     });
+  }
+
+  /**
+ * Preenche automaticamente o formulário de login com credenciais
+ * de acesso rápido para demonstração do projeto.
+ *
+ * O método recebe o tipo de perfil selecionado, localiza as credenciais
+ * correspondentes e atualiza os campos do formulário usando patchValue().
+ *
+ * @param tipo Perfil de demonstração que será preenchido no formulário.
+ *             Pode ser 'medico' ou 'recepcionista'.
+ */
+  preencherAcesso(tipo: 'medico' | 'recepcionista'): void {
+    const credenciais = {
+      medico: {
+        email: 'medico@clinica.com',
+        senha: 'Medico@123'
+      }, 
+      recepcionista: {
+        email: 'recepcionista@clinica.com',
+        senha: 'Recep@123'
+      }
+    };
+
+    // Preenche os campos email e senha conforme o perfil selecionado
+    this.form.patchValue(credenciais[tipo]);
   }
 }
 
