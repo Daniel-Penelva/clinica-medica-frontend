@@ -66,48 +66,51 @@
             Entrar
           }
         </button>
+
+        <!-- Secao de acesso rapido para recrutadores -->
+        <mat-divider class="divider-demo" />
+
+        <p class="demo-titulo">
+          <mat-icon>info</mat-icon>
+          Acesso Rapido — Projeto de Portfólio
+        </p>
+
+        <div class="demo-botoes">
+          <button
+            mat-stroked-button
+            type="button"
+            class="btn-demo"
+            (click)="preencherAcesso('medico')"
+          >
+            <mat-icon>medical_services</mat-icon>
+            Médico
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            class="btn-demo"
+            (click)="preencherAcesso('recepcionista')"
+          >
+            <mat-icon>badge</mat-icon>
+            Recepcionista
+          </button>
+        </div>
+
+        <p class="demo-admin">
+          <mat-icon>lock</mat-icon>
+          Acesso Admin?
+          <a
+            href="https://www.linkedin.com/in/daniel-penelva-andrade/"
+            target="_blank"
+          >
+            Entre em contato
+          </a>
+        </p>
       </form>
     </mat-card-content>
   </mat-card>
 </div>
-
-<!-- Secao de acesso rapido para recrutadores -->
-<mat-divider class="divider-demo" />
-
-<p class="demo-titulo">
-  <mat-icon>info</mat-icon>
-  Acesso Rapido — Projeto de Portfólio
-</p>
-
-<div class="demo-botoes">
-  <button
-    mat-stroked-button
-    type="button"
-    class="btn-demo"
-    (click)="preencherAcesso('medico')"
-  >
-    <mat-icon>medical_services</mat-icon>
-    Médico
-  </button>
-
-  <button
-    mat-stroked-button
-    type="button"
-    class="btn-demo"
-    (click)="preencherAcesso('recepcionista')"
-  >
-    <mat-icon>badge</mat-icon>
-    Recepcionista
-  </button>
-</div>
-
-<p class="demo-admin">
-  <mat-icon>lock</mat-icon>
-  Acesso Admin?
-  <a href="https://www.linkedin.com/in/daniel-penelva-andrade/" target="_blank">
-    Entre em contato
-  </a>
-</p>
 
 <!--
 EXPLICAÇÕES:
